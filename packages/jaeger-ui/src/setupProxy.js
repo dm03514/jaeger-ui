@@ -15,12 +15,15 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 const proxy = require('http-proxy-middleware');
 
+const secure = !!parseInt(process.env.REACT_APP_PROXY_SECURE, 10);
+const target = process.env.REACT_APP_PROXY_TARGET;
+
 module.exports = function setupProxy(app) {
   app.use(
     proxy('/api', {
-      target: 'http://localhost:16686',
+      target,
+      secure,
       logLevel: 'silent',
-      secure: false,
       changeOrigin: true,
       ws: true,
       xfwd: true,
@@ -28,9 +31,9 @@ module.exports = function setupProxy(app) {
   );
   app.use(
     proxy('/analytics', {
-      target: 'http://localhost:16686',
+      target,
+      secure,
       logLevel: 'silent',
-      secure: false,
       changeOrigin: true,
       ws: true,
       xfwd: true,
